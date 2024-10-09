@@ -55,4 +55,14 @@ st_crs(col) == st_crs(roads)
 aves <- st_transform(obs, crs = st_crs(col))
 ```
 
+```{r}
+tm_shape(col_andean) +
+  tm_polygons()+
+tm_shape(roads) +
+  tm_lines() +
+tm_shape(aves) +
+  tm_bubbles(size = 0.05, 
+             col = "order") +
+tm_layout(legend.outside = TRUE)
+```
 
