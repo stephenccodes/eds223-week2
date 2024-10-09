@@ -1,0 +1,58 @@
+---
+title: "wk2_discussion"
+author: "Stephen Carroll"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(here)
+library(tidyverse)
+library(sf)
+library(tmap)
+```
+
+```{r}
+col <- st_read(here("data","data","Colombia", "Colombia.shp"))
+obs <- read_csv(here("data", "data", "dataves.csv"))
+roads <- st_read(here("data", "data", "RDLINE_colombia", "RDLINE_colombia.shp" ))
+```
+
+```{r}
+obs <- obs %>%
+  as_tibble() %>%
+  rename(long = decimal_longitude) %>%
+  rename(lat = decimal_latitude)
+
+obs <- obs %>%
+  st_as_sf(coords = c("long", "lat"), crs = 4326)
+  
+```
+
+```{r}
+col_andean <- col %>%
+  mutate(N1_MacroBi = as.factor(N1_MacroBi)) %>%
+  filter(N1_MacroBi == "Andean")
+```
+
+```{r}
+tm_shape(col_andean) +
+  tm_polygons() +
+  tm_layout(main.title = "Andean Region of Colombia")
+```
+
+```{r}
+st_crs(col)$units
+```
+
+```{r}
+st_crs(col) == st_crs(roads)
+```
+
+```{r}
+aves <- st_transform(obs, crs = st_crs(col))
+```
+
+
